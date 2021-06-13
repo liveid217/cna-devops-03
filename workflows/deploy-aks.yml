@@ -8,7 +8,7 @@ env:
   RESOURCEGROUPNAME: "cna-devops-03-rg"
   LOCATION: "South Central US"
   SUBSCRIPTIONID: "d15badf3-b17b-4ad5-a913-5fb904bd2f71"
-  CLUSTERNAME: "cna-devops-03"
+  CLUSTERNAME: "cna-devops-03-aks"
   CLUSTERLOCATION: "South Central US"
   AGENTCOUNT: "3"
   AGENTVMSIZE: "Standard_DS2_v2"
