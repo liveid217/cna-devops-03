@@ -1,0 +1,39 @@
+name: Deploy AKS
+on:
+  push:
+    branches:
+      - master
+
+env:
+  RESOURCEGROUPNAME: "cna-devops-03-rg"
+  LOCATION: "South Central US"
+  SUBSCRIPTIONID: "d15badf3-b17b-4ad5-a913-5fb904bd2f71"
+  CLUSTERNAME: "cna-devops-03"
+  CLUSTERLOCATION: "South Central US"
+  AGENTCOUNT: "3"
+  AGENTVMSIZE: "Standard_DS2_v2"
+  KUBERNETESVERSION: 1.18.17
+  HTTPSAPPLICATIONROUTINGENABLED: false
+  KUBERNETESAPI: "apps/v1"
+
+jobs:
+  deploy:
+    name: Deploy AKS cluster
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Create AKS Cluster
+      uses: azure/arm-deploy@main
+      id: deploy
+      with:
+        scope: resourcegroup
+        subscriptionId: ${{ env.SUBSCRIPTIONID }}
+        resourceGroupName: ${{ env.RESOURCEGROUPNAME }}
+        template: ./ArmTemplates/aks-template.json
+        parameters: clusterName="${{ env.CLUSTERNAME }}" clusterLocation="${{ env.CLUSTERLOCATION }}" agentCount="${{ env.AGENTCOUNT }}" agentVMSize="${{ env.AGENTVMSIZE }}" kubernetesVersion="${{ env.KUBERNETESVERSION }}" httpApplicationRoutingEnabled="${{ env.HTTPSAPPLICATIONROUTINGENABLED }}"  dnsPrefix="${{ env.CLUSTERNAME }}"
